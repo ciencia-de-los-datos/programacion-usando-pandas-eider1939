@@ -22,7 +22,8 @@ def pregunta_01():
     40
 
     """
-    return
+    row=tbl0.shape[0]
+    return row
 
 
 def pregunta_02():
@@ -33,7 +34,8 @@ def pregunta_02():
     4
 
     """
-    return
+    columnas=tbl0.shape[1]
+    return columnas
 
 
 def pregunta_03():
@@ -50,7 +52,11 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    #value_counts() Devuelve una serie que contiene recuentos de valores únicos.
+    #sort_index() organiza el dataframe por index
+    frecuencia_c1=tbl0['_c1'].value_counts().sort_index()
+
+    return frecuencia_c1
 
 
 def pregunta_04():
@@ -65,7 +71,9 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    #grupamos por columna _c1 y luego sacamor promedios por columna _c2
+    columnas_c1_c2_pro=tbl0.groupby('_c1')['_c2'].mean()
+    return columnas_c1_c2_pro
 
 
 def pregunta_05():
@@ -82,7 +90,8 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    columnas_c1_c2_max=tbl0.groupby('_c1')['_c2'].max()
+    return columnas_c1_c2_max
 
 
 def pregunta_06():
@@ -94,7 +103,9 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    columnas_c4_upper=tbl1['_c4'].str.upper().unique()
+    return sorted(columnas_c4_upper)
+
 
 
 def pregunta_07():
@@ -110,7 +121,8 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+    columnas_c1_c2_sum=tbl0.groupby('_c1')['_c2'].sum()
+    return columnas_c1_c2_sum
 
 
 def pregunta_08():
@@ -128,7 +140,8 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    tbl0['suma']=tbl0['_c0']+tbl0['_c2']
+    return tbl0
 
 
 def pregunta_09():
@@ -146,7 +159,8 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    tbl0['year']=tbl0['_c3'].map(lambda x: x.split('-')[0])
+    return tbl0
 
 
 def pregunta_10():
