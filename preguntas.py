@@ -22,7 +22,8 @@ def pregunta_01():
     40
 
     """
-    return
+    row=tbl0.shape[0]
+    return row
 
 
 def pregunta_02():
@@ -33,7 +34,8 @@ def pregunta_02():
     4
 
     """
-    return
+    columnas=tbl0.shape[1]
+    return columnas
 
 
 def pregunta_03():
@@ -50,7 +52,11 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    #value_counts() Devuelve una serie que contiene recuentos de valores únicos.
+    #sort_index() organiza el dataframe por index
+    frecuencia_c1=tbl0['_c1'].value_counts().sort_index()
+
+    return frecuencia_c1
 
 
 def pregunta_04():
@@ -65,7 +71,9 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    #grupamos por columna _c1 y luego sacamor promedios por columna _c2
+    columnas_c1_c2_pro=tbl0.groupby('_c1')['_c2'].mean()
+    return columnas_c1_c2_pro
 
 
 def pregunta_05():
@@ -82,7 +90,8 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    columnas_c1_c2_max=tbl0.groupby('_c1')['_c2'].max()
+    return columnas_c1_c2_max
 
 
 def pregunta_06():
@@ -94,7 +103,9 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    columnas_c4_upper=tbl1['_c4'].str.upper().unique()
+    return sorted(columnas_c4_upper)
+
 
 
 def pregunta_07():
@@ -110,7 +121,8 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+    columnas_c1_c2_sum=tbl0.groupby('_c1')['_c2'].sum()
+    return columnas_c1_c2_sum
 
 
 def pregunta_08():
@@ -128,7 +140,8 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    tbl0['suma']=tbl0['_c0']+tbl0['_c2']
+    return tbl0
 
 
 def pregunta_09():
@@ -146,7 +159,8 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    tbl0['year']=tbl0['_c3'].map(lambda x: x.split('-')[0])
+    return tbl0
 
 
 def pregunta_10():
@@ -163,7 +177,17 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    #fun(x) recibe la serie de todos los valores de la culumna _c2  que tiene igual variable en la columna _c1
+    #ejemplo "C" elemento de _c1 tendra serie x para la funcion fun(x) a los valores 0 5 6 7 9
+    def fun(x):
+        lista_c2=sorted(list(x)) # se agregan la serie x a un lista y se ordena
+        cadena_c2=""
+        for i in lista_c2:        
+            cadena_c2+=str(i)+":"
+        return cadena_c2[:-1]
+    #serie con index _c1 y los valores de _c2 en cadena separados pr ":"
+    cadena_c1_c2=tbl0.groupby('_c1')['_c2'].apply(lambda x: fun(x)) 
+    return pd.DataFrame(cadena_c1_c2, columns=['_c2'])
 
 
 def pregunta_11():
@@ -182,7 +206,16 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+    def fun_11(x):
+        lista_c4=sorted(list(x))
+        cadena_c4=""
+        for i in lista_c4:
+            cadena_c4+=str(i)+","
+        return cadena_c4[:-1]
+    cadena_c0_c4=tbl1.groupby('_c0')['_c4'].apply(lambda x: fun_11(x))
+    cadena_c0_c4=pd.DataFrame(cadena_c0_c4, columns=['_c4'])
+    cadena_c0_c4.reset_index(inplace=True)
+    return cadena_c0_c4
 
 
 def pregunta_12():
@@ -200,7 +233,19 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    def fun_12(x):
+        _c5a=list(x['_c5a'])
+        _c5b=list(x['_c5b'])
+        cadena=[_c5a[i]+':'+str(_c5b[i]) for i in range(len(_c5a))]
+        cadena=sorted(cadena)
+        cadena_c5a_c5b=""
+        for i in cadena:
+            cadena_c5a_c5b+=i+','
+        return cadena_c5a_c5b[:-1]
+    cadena_c0_c5a_c5b=tbl2.groupby('_c0')[['_c5a','_c5b']].apply(lambda x: fun_12(x))
+    cadena_c0_c5a_c5b=pd.DataFrame(cadena_c0_c5a_c5b, columns=['_c5'])
+    cadena_c0_c5a_c5b.reset_index(inplace=True)
+    return cadena_c0_c5a_c5b
 
 
 def pregunta_13():
@@ -217,4 +262,6 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    df_tbl0_c1_tbl2_c5b=pd.merge(tbl0[['_c0','_c1']],tbl2[['_c0','_c5b']])
+    tbl0_c1_tbl2_c5b_sum=df_tbl0_c1_tbl2_c5b.groupby('_c1')['_c5b'].sum()
+    return tbl0_c1_tbl2_c5b_sum
